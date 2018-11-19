@@ -12,6 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Update text on popping state
+window.addEventListener('popstate', e => {
+  const data = e.state;
+  document.title = data.title;
+  document.querySelector('#body').innerHTML = data.text;
+});
+
 // Renders contents of new page in main view
 function loadPage(name) {
   const request = new XMLHttpRequest();
@@ -19,6 +26,10 @@ function loadPage(name) {
   request.onload = () => {
     const response = request.responseText;
     document.querySelector('#body').innerHTML = response;
+
+    // Push state to URL
+    document.title = name;
+    history.pushState({ 'title': name, 'text': response }, name, name);
   };
   request.send();
 }
